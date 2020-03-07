@@ -1,0 +1,56 @@
+spring:
+  application:
+    name: turbine
+    
+server:
+  port: 5001
+  
+eureka:
+  client:
+    service-url:
+     defaultZone: http://eureka1:2001/eureka, http://eureka2:2002/eureka
+
+#配置turbine的集群名称及默认名称
+turbine:
+#要集群的服务名称
+  app-config: order-service
+  #集群的默认名称
+  cluster-name-expression: new String("default") 
+
+#配置统一访问路径
+#zuul:
+#  routes:
+#    item-service: /item/service/**      
+#    user-service: /user/service/**      
+#    order-service: /order/service/**      
+
+#zuul默认没有开启ribbon服务    
+  retryable: true
+  
+ribbon:
+ ConnectionTimeout: 1000
+ ReadTimeout: 1000 
+ MaxAutoRetriesNextServer: 1
+ MaxAutoRetries: 1 
+ 
+#减低超时时间以便于测试
+hystrix:
+ command:
+  default:
+   execution:
+    isolation:
+     thread:
+      timeOutMillisecond: 500 
+      
+#暴露hytrix.stream监控端点
+management:
+  endpoints:
+    web:
+      exposure:
+        exclude:
+        - hystrix.stream      
+
+#zuul默认过滤cookie,authorization,set-cookie,通过设置为空】
+zuul:
+  sensitive-headers:
+       
